@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 
-app.use('/', (req, res) => res.send('I`m alive'));
+app.use('/health', (req, res) => res.send('I`m alive'));
 
 app.post('/api/orders', orderController.createOrder);
 app.put('/api/orders', orderController.updateOrder);
