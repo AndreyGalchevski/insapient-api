@@ -31,12 +31,12 @@ const updateStock = async merches => {
   try {
     let result;
     for (const item of merches) {
-      const merch = await getOne(item.sku);
+      const merch = await getMerch(item.sku);
       if (item.size) {
         merch.stock.sizes[item.size] -= item.quantity;
       }
       merch.stock.total -= item.quantity;
-      result = await update({ _id: item.sku }, merch);
+      result = await updateMerch({ _id: item.sku }, merch);
     }
     return result;
   } catch (error) {

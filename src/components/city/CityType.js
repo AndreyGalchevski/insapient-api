@@ -7,7 +7,7 @@ const CityType = new GraphQLObjectType({
     country: { type: GraphQLString },
     name: { type: GraphQLString },
     lat: { type: GraphQLString },
-    long: { type: GraphQLString }
+    lng: { type: GraphQLString }
   }
 });
 

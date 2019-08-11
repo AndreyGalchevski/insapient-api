@@ -11,7 +11,7 @@ const verifyPrices = async order => {
   const verifiedOrder = cloneDeep(order);
 
   verifiedOrder.transaction.item_list.items.forEach(async item => {
-    const merch = await merchService.getOne(item.sku);
+    const merch = await merchService.getMerch(item.sku);
     item.price = merch.price;
     item.currency = 'USD';
   });

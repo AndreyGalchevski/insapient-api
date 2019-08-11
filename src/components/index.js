@@ -12,6 +12,7 @@ const { GigType, gigResolver } = require('./gig');
 const { LyricType, lyricResolver } = require('./lyric');
 const { MemberType, memberResolver } = require('./member');
 const { MerchType, merchResolver } = require('./merch');
+const { OrderInputType, OrderType, orderResolver } = require('./order');
 const { SongType, songResolver } = require('./song');
 const { VideoType, videoResolver } = require('./video');
 
@@ -59,9 +60,36 @@ const QueryType = new GraphQLObjectType({
   }
 });
 
+const MutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    createOrder: {
+      type: GraphQLString,
+      args: {
+        order: { type: new GraphQLNonNull(OrderInputType) }
+      },
+      resolve: orderResolver.createOrder
+    },
+    updateOrder: {
+      type: OrderType,
+      args: {
+        order: { type: new GraphQLNonNull(OrderInputType) }
+      },
+      resolve: orderResolver.updateOrder
+    },
+    deleteOrder: {
+      type: OrderType,
+      args: {
+        token: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve: orderResolver.deleteOrder
+    }
+  }
+});
+
 const schema = new GraphQLSchema({
-  query: QueryType
-  // mutation: MyAppMutationRootType
+  query: QueryType,
+  mutation: MutationType
 });
 
 module.exports = {

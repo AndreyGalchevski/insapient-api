@@ -3,14 +3,13 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLList,
-  GraphQLID,
   GraphQLInputObjectType
 } = require('graphql');
 
 const { DateType } = require('../common/types');
 
-const ItemType = new GraphQLObjectType({
-  name: 'Item',
+const ItemInputType = new GraphQLInputObjectType({
+  name: 'ItemInput',
   fields: {
     name: { type: GraphQLString },
     sku: { type: GraphQLString },
@@ -21,32 +20,32 @@ const ItemType = new GraphQLObjectType({
   }
 });
 
-const ItemListType = new GraphQLObjectType({
-  name: 'ItemList',
+const ItemListInputType = new GraphQLInputObjectType({
+  name: 'ItemListInput',
   fields: {
-    items: { type: new GraphQLList(ItemType) }
+    items: { type: new GraphQLList(ItemInputType) }
   }
 });
 
-const DetailsType = new GraphQLObjectType({
-  name: 'Details',
+const DetailsInputType = new GraphQLInputObjectType({
+  name: 'DetailsInput',
   fields: {
     subtotal: { type: GraphQLInt },
     shipping: { type: GraphQLInt }
   }
 });
 
-const AmountType = new GraphQLObjectType({
-  name: 'Amount',
+const AmountInputType = new GraphQLInputObjectType({
+  name: 'AmountInput',
   fields: {
-    details: { type: DetailsType },
+    details: { type: DetailsInputType },
     currency: { type: GraphQLString },
     total: { type: GraphQLInt }
   }
 });
 
-const CustomerInfoType = new GraphQLObjectType({
-  name: 'CustomerInfo',
+const CustomerInfoInputType = new GraphQLInputObjectType({
+  name: 'CustomerInfoInput',
   fields: {
     fullName: { type: GraphQLString },
     email: { type: GraphQLString },
@@ -58,28 +57,28 @@ const CustomerInfoType = new GraphQLObjectType({
   }
 });
 
-const TransactionType = new GraphQLObjectType({
-  name: 'Transaction',
+const TransactionInputType = new GraphQLInputObjectType({
+  name: 'TransactionInput',
   fields: {
-    item_list: { type: ItemListType },
-    amount: { type: AmountType },
+    item_list: { type: ItemListInputType },
+    amount: { type: AmountInputType },
     description: { type: GraphQLString }
   }
 });
 
-const OrderType = new GraphQLObjectType({
-  name: 'Order',
+const OrderInputType = new GraphQLInputObjectType({
+  name: 'OrderInput',
   fields: {
-    _id: { type: GraphQLID },
     paymentId: { type: GraphQLString },
+    payerId: { type: GraphQLString },
     token: { type: GraphQLString },
     status: { type: GraphQLString },
     date: { type: DateType },
-    transaction: { type: TransactionType },
-    customerInfo: { type: CustomerInfoType }
+    transaction: { type: TransactionInputType },
+    customerInfo: { type: CustomerInfoInputType }
   }
 });
 
 module.exports = {
-  OrderType
+  OrderInputType
 };
