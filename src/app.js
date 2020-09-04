@@ -2,21 +2,46 @@ require('dotenv').config();
 
 const express = require('express');
 
-const db = require('./utils/db');
-const commonMiddleware = require('./middleware/commonMiddleware');
-const graphQLMiddleware = require('./middleware/graphQLMiddleware');
-const errorHandlingMiddleware = require('./middleware/errorHandlingMiddleware');
+const dbUtils = require('./utils/db');
+const commonMiddleware = require('./middleware/common-middleware');
+const errorHandlingMiddleware = require('./middleware/error-handling-middleware');
 
-const port = process.env.PORT || 8080;
+const App = (controllers, port) => {
+  const app = express();
 
-db.connect();
+  const initMiddleware = () => {
+    dbUtils
+      .init(app)
+      .then(dbInstance => {
+        app.locals.db = dbInstance;
+        // routes.init(app);
+        commonMiddleware.init(app);
+        errorHandlingMiddleware.init(app);
+      })
+      .catch(error => {
+        console.error(error);
+        process.exit(1);
+      });
+  };
 
-const app = express();
+  const initControllers = () => {
+    controllers.forEach(controller => {
+      app.use('/api', controller.router);
+    });
+  };
 
-commonMiddleware.init(app);
-graphQLMiddleware.init(app);
-errorHandlingMiddleware.init(app);
+  const listen = () => {
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  };
 
-app.listen(port);
+  initMiddleware();
+  initControllers();
 
-console.log(`Server running on port ${port}`);
+  return Object.freeze({
+    listen
+  });
+};
+
+module.exports = App;

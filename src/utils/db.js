@@ -1,18 +1,16 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 
-mongoose.Promise = global.Promise;
-
-const connect = async () => {
+const init = async () => {
   try {
-    await mongoose.connect(process.env.DB_URI, {
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useUnifiedTopology: true
-    });
+    const mongoClient = new MongoClient(process.env.DB_URI, { useUnifiedTopology: true });
+    const client = await mongoClient.connect();
     console.log('Connected to DB');
+    const db = client.db(process.env.DB_NAME);
+    return db;
   } catch (error) {
     console.error(`Error connecting to DB: ${error}`);
+    throw error;
   }
 };
 
-module.exports = { connect };
+module.exports = { init };
