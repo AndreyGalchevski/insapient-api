@@ -26,7 +26,7 @@ const App = (controllers, port) => {
 
   const initControllers = () => {
     controllers.forEach(controller => {
-      app.use('/api', controller.router);
+      app.use('/', controller.router);
     });
   };
 
