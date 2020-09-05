@@ -5,7 +5,12 @@ const morgan = require('morgan');
 
 const init = app => {
   app.use(helmet());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.ALLOWED_ORIGIN,
+      optionsSuccessStatus: 200
+    })
+  );
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(morgan('tiny'));

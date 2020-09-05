@@ -51,13 +51,9 @@ const OrdersService = db => {
     return paymentPageUrl;
   };
 
-  const updateOrder = async data => {
-    const order = await db.collection('orders').findOne({ paymentId: data.paymentId });
-    const paymentResponse = await paypal.execute(
-      data.payerId,
-      data.paymentId,
-      order.transaction.amount
-    );
+  const updateOrder = async (paymentID, data) => {
+    const order = await db.collection('orders').findOne({ paymentId: paymentID });
+    const paymentResponse = await paypal.execute(data.payerId, paymentID, order.transaction.amount);
     if (paymentResponse.state === 'approved') {
       const merchandisesService = MerchandisesService(db);
       await merchandisesService.updateStock(order.transaction.item_list.items);

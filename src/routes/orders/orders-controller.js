@@ -23,7 +23,7 @@ const OrdersController = () => {
       return req.status(400).json({ error: 'Bad Request' });
     }
     const ordersService = OrdersService(req.app.locals.db);
-    const updatedOrder = await ordersService.updateOrder(req.body);
+    const updatedOrder = await ordersService.updateOrder(req.params.paymentID, req.body);
     if (!updatedOrder) {
       throw new Error('Error updating order');
     } else {
@@ -36,7 +36,7 @@ const OrdersController = () => {
       return req.status(400).json({ error: 'Bad Request' });
     }
     const ordersService = OrdersService(req.app.locals.db);
-    const deletedOrder = await ordersService.deleteOrder({ token: req.query.token });
+    const deletedOrder = await ordersService.deleteOrder({ token: req.params.token });
     if (!deletedOrder) {
       throw new Error('Error deleting order');
     } else {
@@ -45,8 +45,8 @@ const OrdersController = () => {
   };
 
   router.post(path, createOrder);
-  router.patch(path, updateOrder);
-  router.delete(path, deleteOrder);
+  router.patch(`${path}/:paymentID`, updateOrder);
+  router.delete(`${path}/:token`, deleteOrder);
 
   return Object.freeze({
     router
