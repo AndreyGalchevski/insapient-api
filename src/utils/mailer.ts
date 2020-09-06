@@ -1,8 +1,10 @@
 import sgMail from '@sendgrid/mail';
 
+import { Order } from '../routes/orders/orders-types';
+
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
-const sendShippingInformation = async (order) => {
+const sendShippingInformation = async (order: Order): Promise<void> => {
   let items = '';
   order.transaction.item_list.items.forEach((item) => {
     items += `
@@ -49,10 +51,10 @@ const sendShippingInformation = async (order) => {
 
     `,
   };
-  return sgMail.send(info);
+  await sgMail.send(info);
 };
 
-const sendPaymentConfirmation = async (order) => {
+const sendPaymentConfirmation = async (order: Order): Promise<void> => {
   let items = '';
   order.transaction.item_list.items.forEach((item) => {
     items += `
@@ -95,7 +97,7 @@ const sendPaymentConfirmation = async (order) => {
       </div>
     `,
   };
-  return sgMail.send(info);
+  await sgMail.send(info);
 };
 
 export default {

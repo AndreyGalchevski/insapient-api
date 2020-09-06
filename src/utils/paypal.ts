@@ -39,17 +39,12 @@ const pay = async (
     transactions: [transaction],
   };
 
-  try {
-    const res = await createPay(paymentInfo);
-    const { id, links } = res;
-    const paymentLink = links.find((link) => link.rel === 'approval_url');
-    const paymentPageUrl = paymentLink.href;
-    const { token } = qs.parseUrl(paymentPageUrl).query;
-    return { paymentId: id, token: token as string, paymentPageUrl: paymentLink.href };
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const res = await createPay(paymentInfo);
+  const { id, links } = res;
+  const paymentLink = links.find((link) => link.rel === 'approval_url');
+  const paymentPageUrl = paymentLink.href;
+  const { token } = qs.parseUrl(paymentPageUrl).query;
+  return { paymentId: id, token: token as string, paymentPageUrl: paymentLink.href };
 };
 
 const executePay = (paymentID: string, paymentInfo: paymentNS.ExecuteRequest) => {
@@ -74,13 +69,8 @@ const execute = async (
     transactions: [{ amount }],
   };
 
-  try {
-    const res = await executePay(paymentID, paymentInfo);
-    return res;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const res = await executePay(paymentID, paymentInfo);
+  return res;
 };
 
 export default {
